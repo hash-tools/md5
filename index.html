@@ -1,0 +1,109 @@
+<html>
+<head>
+<style>
+div.container {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    margin-bottom: auto;
+
+    width:50%;
+    height:80%;
+}
+
+button.main {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+textarea.main {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width:50%;
+    height:80%;
+}
+
+.caption {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+</style>
+<script src="js/md5.js"></script>
+<script>
+if(typeof(String.prototype.trim) === "undefined")
+{
+    String.prototype.trim = function() 
+    {
+        return String(this).replace(/^\s+|\s+$/g, '');
+    };
+}
+
+canonize = function(line) {
+    return line.trim().toLowerCase();
+}
+
+getLinesHashes = function() {
+    textareaMain = document.getElementById("textareaMain");
+	lines = textareaMain.value.split("\n");
+    textareaMain.value = "";
+    for(var i = 0; i < lines.length; i++) {
+        canonizedItem = canonize(lines[i]);   
+        if (canonizedItem !== "") {     
+            hashSum = asHex(md5(fromUTF8String(lines[i])));
+            textareaMain.value += asHex(md5(fromUTF8String(canonizedItem))) + "\n";
+        }
+	}
+}
+
+copyText = function(text){
+  function selectElementText(element) {
+    if (document.selection) {
+      var range = document.body.createTextRange();
+      range.moveToElementText(element);
+      range.select();
+    } else if (window.getSelection) {
+      var range = document.createRange();
+      range.selectNode(element);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+  }
+  var element = document.createElement('DIV');
+  element.textContent = text.replace(/\s+/g, "\n");
+  document.body.appendChild(element);
+  selectElementText(element);
+  document.execCommand('copy');
+  element.remove();
+}
+
+changeButton = function() {
+    buttonMain = document.getElementById("buttonMain");
+    buttonMain.parentNode.removeChild(buttonMain);
+    //buttonMain.innerHTML = "Копировать";
+    //buttonMain.onclick = function() { copyText(document.getElementById('textareaMain').value); }; 
+
+}
+</script>
+</head>
+<body>
+
+<div class="container">
+<button id="buttonMain" class="main" onclick="getLinesHashes(); changeButton();">Захешировать</button>  
+<textarea id="textareaMain" class="main" placeholder="почтовые адреса или номера телефонов">
+</textarea>
+
+<div class="caption">
+<center>
+<span class="caption">Вставляемые в форму данные не отправляются куда-либо.</span>
+<span class="caption"><a href="https://www.youtube.com/watch?v=aMh-w2u0k5o">Как вставить результат в Excel?</a></span>
+</center>
+</div>
+</div>
+</body>
+</html>
